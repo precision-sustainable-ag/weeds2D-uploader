@@ -1,8 +1,13 @@
-import React from "react";
-import Button from "@mui/material/Button";
+import React, { Fragment, useState } from "react";
+import { Button, Snackbar, Alert } from "@mui/material";
 import xml2js from "xml2js";
 import { v4 as uuidv4 } from "uuid";
 import { BlobServiceClient } from "@azure/storage-blob";
+
+// // Helper function
+// function Alert(props) {
+//   return <Alert elevation={6} variant="filled" {...props} />;
+// }
 
 const Uploader = () => {
   const token = process.env.REACT_APP_BLOB_SAS_TOKEN;
@@ -10,6 +15,12 @@ const Uploader = () => {
   const containerName = `weedsimagerepo`;
   const sasToken = process.env.REACT_APP_BLOB_SAS_TOKEN;
   const storageAccountName = `weedsimagerepo`;
+
+  const [snackbarData, setSnackbarData] = useState({
+    open: false,
+    text: "",
+    severity: "success",
+  });
 
   const getImageRow = async (imageName) => {
     const blobURL = `https://weedsimagerepo.table.core.windows.net/wirimagerefs()${token}`;
@@ -108,25 +119,50 @@ const Uploader = () => {
         console.log(res);
         if (res !== false) {
           insertNewImageRow(res);
-          uploadFileToBlob(file).then(console.log("done!"));
+          uploadFileToBlob(file).then(
+            setSnackbarData({
+              open: true,
+              text: "Successfully uploaded your images!",
+              severity: "success",
+            })
+          );
         } else {
-          console.log("Theres a dupe");
+          setSnackbarData({
+            open: true,
+            text: "There are multiple matching JPGs or no matching JPGs!",
+            severity: "error",
+          });
         }
       });
     });
   };
 
   return (
-    <Button variant="contained" component="label">
-      Upload Files
-      <input
-        type="file"
-        multiple
-        hidden
-        accept=".arw"
-        onChange={handlePickedFiles}
-      />
-    </Button>
+    <Fragment>
+      <Snackbar
+        anchorOrigin={{
+          vertical: "bottom",
+          horizontal: "center",
+        }}
+        open={snackbarData.open}
+        autoHideDuration={10000}
+        onClose={() =>
+          setSnackbarData({ ...snackbarData, open: !snackbarData.open })
+        }
+      >
+        <Alert severity={snackbarData.severity}>{snackbarData.text}</Alert>
+      </Snackbar>
+      <Button variant="contained" component="label">
+        Upload Files
+        <input
+          type="file"
+          multiple
+          hidden
+          accept=".arw"
+          onChange={handlePickedFiles}
+        />
+      </Button>
+    </Fragment>
   );
 };
 

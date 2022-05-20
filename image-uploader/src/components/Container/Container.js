@@ -1,10 +1,19 @@
-import React from "react";
+import React, { useState } from "react";
 import { Card, CardMedia, CardContent, CardActions, Grid } from "@mui/material";
 import Uploader from "../Uploader/Uploader";
 import Instructions from "../Instructions/Instructions";
 import pic from "../../images/pexels-alejandro-barrón-96715.jpg";
+import Login from "../Login/Login";
+import Snack from "../Snackbar/Snack";
 
 const Container = () => {
+  const [loggedIn, setLoggedIn] = useState(false);
+  const [snackbarData, setSnackbarData] = useState({
+    open: false,
+    text: "",
+    severity: "success",
+  });
+
   return (
     <Grid
       container
@@ -14,6 +23,7 @@ const Container = () => {
       justifyContent="center"
     >
       <Grid item>
+        <Snack snackbarData={snackbarData} setSnackbarData={setSnackbarData} />
         <Card>
           <CardMedia
             component="img"
@@ -26,7 +36,14 @@ const Container = () => {
             <Instructions />
           </CardContent>
           <CardActions>
-            <Uploader />
+            {loggedIn ? (
+              <Uploader setSnackbarData={setSnackbarData} />
+            ) : (
+              <Login
+                setLoggedIn={setLoggedIn}
+                setSnackbarData={setSnackbarData}
+              />
+            )}
           </CardActions>
         </Card>
       </Grid>

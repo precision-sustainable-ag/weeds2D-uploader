@@ -4,7 +4,6 @@ import { BlobServiceClient } from "@azure/storage-blob";
 
 const token = process.env.REACT_APP_BLOB_SAS_TOKEN;
 const headers = { "Content-Type": "application/json" };
-const containerName = `weedsimagerepo`;
 const sasToken = process.env.REACT_APP_BLOB_SAS_TOKEN;
 const storageAccountName = `weedsimagerepo`;
 
@@ -40,7 +39,7 @@ export const getImageRow = async (imageName) => {
   });
 };
 
-export const insertNewImageRow = async (imageRow) => {
+export const insertNewFieldImageRow = async (imageRow) => {
   const blobURL = `https://weedsimagerepo.table.core.windows.net/wirimagerefs${token}`;
 
   console.log(imageRow);
@@ -83,7 +82,7 @@ const createBlobInContainer = async (containerClient, file) => {
 };
 
 // <snippet_uploadFileToBlob>
-export const uploadFileToBlob = async (file) => {
+export const uploadFileToBlob = async (file, containerName) => {
   if (!file) return [];
 
   // get BlobService = notice `?` is pulled out of sasToken - if created in Azure portal

@@ -8,7 +8,8 @@ function App() {
       <Routes>
         <Route path="/" element={<Container />}>
           <Route index element={<Container />} />
-          <Route path="uploader" element={<Container />} />
+          <Route path="field" element={<Container />} />
+          <Route path="semifield" element={<Container />} />
         </Route>
       </Routes>
     </BrowserRouter>

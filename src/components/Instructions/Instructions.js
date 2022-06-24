@@ -9,9 +9,6 @@ const Instructions = () => {
           Welcome to the weeds2D image uploader!
         </Typography>
       </Grid>
-      <Grid item>
-        <Typography>Click below to upload raw files.</Typography>
-      </Grid>
     </Grid>
   );
 };

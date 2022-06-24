@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useLocation } from "react-router-dom";
-import { Card, CardMedia, CardContent, CardActions, Grid } from "@mui/material";
+import { Card, CardMedia, CardContent, Grid } from "@mui/material";
 import FieldUploader from "../Uploaders/FieldUploader";
 import SemifieldUploader from "../Uploaders/SemifieldUploader";
 import Instructions from "../Instructions/Instructions";
@@ -18,13 +18,33 @@ const Container = () => {
     text: "",
     severity: "success",
   });
+  const [uploadingFiles, setUploadingFiles] = useState(false);
+  const [helperText, setHelperText] = useState(
+    "Click below to upload your raw files!"
+  );
 
   const CurrentView = () => {
     if (loggedIn) {
       if (pathName === "/field") {
-        return <FieldUploader setSnackbarData={setSnackbarData} />;
+        return (
+          <FieldUploader
+            setSnackbarData={setSnackbarData}
+            uploadingFiles={uploadingFiles}
+            setUploadingFiles={setUploadingFiles}
+            helperText={helperText}
+            setHelperText={setHelperText}
+          />
+        );
       } else {
-        return <SemifieldUploader setSnackbarData={setSnackbarData} />;
+        return (
+          <SemifieldUploader
+            setSnackbarData={setSnackbarData}
+            uploadingFiles={uploadingFiles}
+            setUploadingFiles={setUploadingFiles}
+            helperText={helperText}
+            setHelperText={setHelperText}
+          />
+        );
       }
     } else {
       return (
@@ -53,10 +73,8 @@ const Container = () => {
           />
           <CardContent>
             <Instructions />
-          </CardContent>
-          <CardActions>
             <CurrentView />
-          </CardActions>
+          </CardContent>
         </Card>
       </Grid>
     </Grid>

@@ -8,7 +8,7 @@ const sasToken = process.env.REACT_APP_BLOB_SAS_TOKEN;
 const storageAccountName = `weedsimagerepo`;
 
 export const getImageRow = async (imageName) => {
-  const blobURL = `https://weedsimagerepo.table.core.windows.net/wirimagerefs()${token}`;
+  const blobURL = `https://weedsimagerepo.table.core.windows.net/wirimagerefs()${token}&$filter=ImageURL%20ge%20'https://weedsimagerepo.blob.core.windows.net/weedsimagerepo/${imageName}.ARW'%20and%20ImageURL%20le%20'https://weedsimagerepo.blob.core.windows.net/weedsimagerepo/${imageName}.JPG'`;
 
   return fetch(blobURL, { headers: headers }).then((fetchRes) => {
     return fetchRes.text().then((textRes) => {
@@ -19,19 +19,11 @@ export const getImageRow = async (imageName) => {
           throw err;
         }
 
-        const selectedTableEntry = result.feed.entry.filter((row) => {
-          return row.content[0]["m:properties"][0]["d:ImageURL"][0].includes(
-            imageName
-          );
-        });
-
-        console.log(selectedTableEntry);
-
-        if (selectedTableEntry.length === 0)
+        if (result.feed.entry.length === 0)
           imageRow = "No JPG file present in Azure Blob Storage";
-        else if (selectedTableEntry.length > 1)
+        else if (result.feed.entry.length > 1)
           imageRow = "Multiple JPG files present in Azure Blob Storage";
-        else imageRow = selectedTableEntry[0].content[0]["m:properties"][0];
+        else imageRow = result.feed.entry[0].content[0]["m:properties"][0];
       });
 
       return imageRow;
@@ -42,10 +34,8 @@ export const getImageRow = async (imageName) => {
 export const insertNewFieldImageRow = async (imageRow) => {
   const blobURL = `https://weedsimagerepo.table.core.windows.net/wirimagerefs${token}`;
 
-  console.log(imageRow);
-
   const newImageURL =
-    imageRow["d:ImageURL"][0].split(".").slice(0, -1).join(".") + ".arw";
+    imageRow["d:ImageURL"][0].split(".").slice(0, -1).join(".") + ".ARW";
 
   const data = {
     PartitionKey: imageRow["d:PartitionKey"][0],
@@ -57,8 +47,6 @@ export const insertNewFieldImageRow = async (imageRow) => {
       ? imageRow["d:ImageIndex"][0]["_"]
       : imageRow["d:ImageIndex"][0],
   };
-
-  console.log(data);
 
   const options = {
     method: "POST",

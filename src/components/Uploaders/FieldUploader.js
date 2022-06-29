@@ -24,9 +24,9 @@ const FieldUploader = ({
       getImageRow(file.name.split(".")[0]).then((res) => {
         if (typeof res === "string" || res instanceof String) {
           setHelperText(
-            "Failed to upload one or more raw files because " +
+            "Failed to upload, " +
               file.name +
-              " exists in azure."
+              " exists in azure. Trying the next file... Do not close the browser."
           );
           setSnackbarData({
             open: true,

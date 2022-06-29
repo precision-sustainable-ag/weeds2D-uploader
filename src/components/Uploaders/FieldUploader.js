@@ -36,27 +36,19 @@ const FieldUploader = ({
         } else {
           setUploadingFiles(true);
           insertNewFieldImageRow(res).then(() => {
-            uploadFileToBlob(file, "weedsimagerepo")
-              .then(() => {
-                if (index === event.target.files.length - 1) {
-                  setUploadingFiles(false);
-                  setHelperText(
-                    "Successfully uploaded your raw files. Click below to upload more."
-                  );
-                }
-                setSnackbarData({
-                  open: true,
-                  text: "Successfully uploaded image " + file.name,
-                  severity: "success",
-                });
-              })
-              .catch((e) => {
-                console.log(e);
-                setHelperText(
-                  "Failed to upload one or more raw files. Click below to try again."
-                );
+            uploadFileToBlob(file, "weedsimagerepo").then(() => {
+              if (index === event.target.files.length - 1) {
                 setUploadingFiles(false);
+                setHelperText(
+                  "Successfully uploaded your raw files. Click below to upload more."
+                );
+              }
+              setSnackbarData({
+                open: true,
+                text: "Successfully uploaded image " + file.name,
+                severity: "success",
               });
+            });
           });
         }
       });
@@ -84,7 +76,10 @@ const FieldUploader = ({
                 multiple
                 hidden
                 accept=".arw"
-                onChange={handlePickedFiles}
+                onChange={(event) => {
+                  handlePickedFiles(event);
+                  event.target = null;
+                }}
               />
             </Button>
           </Grid>

@@ -14,27 +14,19 @@ const SemifieldUploader = ({
     setUploadingFiles(true);
     Array.from(event.target.files).forEach((file, index) => {
       const new_file = new File([file], file.webkitRelativePath);
-      uploadFileToBlob(new_file, "semifield-upload")
-        .then(() => {
-          if (index === event.target.files.length - 1) {
-            setUploadingFiles(false);
-            setHelperText(
-              "Successfully uploaded your folder. Click below to upload another."
-            );
-          }
-          setSnackbarData({
-            open: true,
-            text: "Successfully uploaded folder " + new_file.name.split("/")[0],
-            severity: "success",
-          });
-        })
-        .catch((e) => {
-          console.log(e);
-          setHelperText(
-            "Failed to upload one or more files in your folder. Click below to try again."
-          );
+      uploadFileToBlob(new_file, "semifield-upload").then(() => {
+        if (index === event.target.files.length - 1) {
           setUploadingFiles(false);
+          setHelperText(
+            "Successfully uploaded your folder. Click below to upload another."
+          );
+        }
+        setSnackbarData({
+          open: true,
+          text: "Successfully uploaded folder " + new_file.name.split("/")[0],
+          severity: "success",
         });
+      });
     });
   };
 
@@ -60,7 +52,10 @@ const SemifieldUploader = ({
                 directory=""
                 webkitdirectory=""
                 type="file"
-                onChange={handlePickedFiles}
+                onChange={(event) => {
+                  handlePickedFiles(event);
+                  event.target = null;
+                }}
               />
             </Button>
           </Grid>

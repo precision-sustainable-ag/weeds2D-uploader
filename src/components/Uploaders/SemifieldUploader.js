@@ -52,10 +52,7 @@ const SemifieldUploader = ({
                 directory=""
                 webkitdirectory=""
                 type="file"
-                onChange={(event) => {
-                  handlePickedFiles(event);
-                  event.target = null;
-                }}
+                onChange={handlePickedFiles}
               />
             </Button>
           </Grid>

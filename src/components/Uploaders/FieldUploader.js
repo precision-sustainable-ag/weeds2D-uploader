@@ -76,10 +76,7 @@ const FieldUploader = ({
                 multiple
                 hidden
                 accept=".arw"
-                onChange={(event) => {
-                  handlePickedFiles(event);
-                  event.target = null;
-                }}
+                onChange={handlePickedFiles}
               />
             </Button>
           </Grid>

@@ -2,13 +2,24 @@ import xml2js from "xml2js";
 import { v4 as uuidv4 } from "uuid";
 import { BlobServiceClient } from "@azure/storage-blob";
 
-const token = process.env.REACT_APP_BLOB_SAS_TOKEN;
 const headers = { "Content-Type": "application/json" };
-const sasToken = process.env.REACT_APP_BLOB_SAS_TOKEN;
-const storageAccountName = `weedsimagerepo`;
+
+let sasToken = process.env.REACT_APP_BLOB_SAS_TOKEN;
+let storageAccountName = `weedsimagerepo`;
+const storageContainerName = `weedsimagerepo`;
+
+// if (!process.env.NODE_ENV || process.env.NODE_ENV === "development") {
+//   // dev code
+//   sasToken = process.env.REACT_APP_BLOB_SAS_TOKEN_DEVELOP;
+//   storageAccountName = `weedsimagerepodev`;
+// } else {
+//   // production code
+//   sasToken = process.env.REACT_APP_BLOB_SAS_TOKEN;
+//   storageAccountName = `weedsimagerepo`;
+// }
 
 export const getImageRow = async (imageName) => {
-  const blobURL = `https://weedsimagerepo.table.core.windows.net/wirimagerefs()${token}&$filter=ImageURL%20ge%20'https://weedsimagerepo.blob.core.windows.net/weedsimagerepo/${imageName}.ARW'%20and%20ImageURL%20le%20'https://weedsimagerepo.blob.core.windows.net/weedsimagerepo/${imageName}.JPG'`;
+  const blobURL = `https://${storageAccountName}.table.core.windows.net/wirimagerefs()${sasToken}&$filter=ImageURL%20ge%20'https://${storageAccountName}.blob.core.windows.net/${storageContainerName}/${imageName}.ARW'%20and%20ImageURL%20le%20'https://${storageAccountName}.blob.core.windows.net/${storageContainerName}/${imageName}.JPG'`;
 
   return fetch(blobURL, { headers: headers }).then((fetchRes) => {
     return fetchRes.text().then((textRes) => {
@@ -20,9 +31,12 @@ export const getImageRow = async (imageName) => {
         }
 
         if (result.feed.entry.length === 0)
-          imageRow = "No JPG file present in Azure Blob Storage";
+          imageRow =
+            "No JPG file present in Azure Blob Storage with name " + imageName;
         else if (result.feed.entry.length > 1)
-          imageRow = "Multiple JPG files present in Azure Blob Storage";
+          imageRow =
+            "Multiple JPG files present in Azure Blob Storage with name " +
+            imageName;
         else imageRow = result.feed.entry[0].content[0]["m:properties"][0];
       });
 
@@ -32,7 +46,7 @@ export const getImageRow = async (imageName) => {
 };
 
 export const insertNewFieldImageRow = async (imageRow) => {
-  const blobURL = `https://weedsimagerepo.table.core.windows.net/wirimagerefs${token}`;
+  const blobURL = `https://${storageAccountName}.table.core.windows.net/wirimagerefs${sasToken}`;
 
   const newImageURL =
     imageRow["d:ImageURL"][0].split(".").slice(0, -1).join(".") + ".ARW";

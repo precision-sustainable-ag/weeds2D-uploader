@@ -15,39 +15,52 @@ const FieldUploader = ({
   setHelperText,
 }) => {
   const handlePickedFiles = (event) => {
-    Array.from(event.target.files).forEach((file, index) => {
-      setSnackbarData({
-        open: true,
-        text: "Uploading your images, do not close browser",
-        severity: "warning",
-      });
+    const numberOfFiles = event.target.files.length;
+    let failedFiles = "";
+    let index = 0;
+    Array.from(event.target.files).forEach((file) => {
       getImageRow(file.name.split(".")[0]).then((res) => {
         if (typeof res === "string" || res instanceof String) {
-          setHelperText(
-            "Failed to upload, " +
-              file.name +
-              " exists in azure. Trying the next file... Do not close the browser."
-          );
           setSnackbarData({
             open: true,
             text: res,
             severity: "error",
           });
+          if (index === numberOfFiles - 1) {
+            setUploadingFiles(false);
+            failedFiles = failedFiles + file.name;
+            setHelperText(
+              "Finished uploading your files. The following failed: " +
+                failedFiles
+            );
+          } else {
+            setHelperText(
+              "Failed to upload, " +
+                file.name +
+                " exists in azure. Trying the next file... Do not close the browser."
+            );
+            failedFiles = failedFiles + file.name + ", ";
+          }
+          index += 1;
         } else {
           setUploadingFiles(true);
-          insertNewFieldImageRow(res).then(() => {
-            uploadFileToBlob(file, "weedsimagerepo").then(() => {
-              if (index === event.target.files.length - 1) {
+          uploadFileToBlob(file, "weedsimagerepo").then(() => {
+            insertNewFieldImageRow(res).then(() => {
+              if (index === numberOfFiles - 1) {
                 setUploadingFiles(false);
-                setHelperText(
-                  "Successfully uploaded your raw files. Click below to upload more."
-                );
+                const finalText =
+                  failedFiles === ""
+                    ? "Successfully uploaded your raw files. Click below to upload more."
+                    : "Finished uploading your files. The following failed: " +
+                      failedFiles;
+                setHelperText(finalText);
               }
               setSnackbarData({
                 open: true,
                 text: "Successfully uploaded image " + file.name,
                 severity: "success",
               });
+              index += 1;
             });
           });
         }
@@ -55,40 +68,32 @@ const FieldUploader = ({
     });
   };
 
-  return (
-    <Grid container spacing={2}>
-      {uploadingFiles ? (
-        <Grid item>
-          <Typography>
-            Uploading your images, do not close the browser!
-          </Typography>
+  if (uploadingFiles) return <Fragment></Fragment>;
+  else
+    return (
+      <Grid item container spacing={2}>
+        <Grid item xs={12} sm={12} md={12} lg={12}>
+          <Typography>{helperText}</Typography>
         </Grid>
-      ) : (
-        <Fragment>
-          <Grid item xs={12} sm={12} md={12} lg={12}>
-            <Typography>{helperText}</Typography>
-          </Grid>
-          <Grid item>
-            <Button variant="contained" component="label">
-              Upload Files
-              <input
-                type="file"
-                multiple
-                hidden
-                accept=".arw"
-                onChange={handlePickedFiles}
-              />
-            </Button>
-          </Grid>
-          <Grid item>
-            <Button component={Link} to="semifield" variant="contained">
-              Go to semifield uploader
-            </Button>
-          </Grid>
-        </Fragment>
-      )}
-    </Grid>
-  );
+        <Grid item>
+          <Button variant="contained" component="label">
+            Upload Files
+            <input
+              type="file"
+              multiple
+              hidden
+              accept=".arw"
+              onChange={handlePickedFiles}
+            />
+          </Button>
+        </Grid>
+        <Grid item>
+          <Button component={Link} to="semifield" variant="contained">
+            Go to semifield uploader
+          </Button>
+        </Grid>
+      </Grid>
+    );
 };
 
 export default FieldUploader;

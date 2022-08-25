@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, Fragment } from "react";
 import { useLocation } from "react-router-dom";
 import { Card, CardMedia, CardContent, Grid } from "@mui/material";
 import FieldUploader from "../Uploaders/FieldUploader";
@@ -7,6 +7,7 @@ import Instructions from "../Instructions/Instructions";
 import pic from "../../images/pexels-alejandro-barrón-96715.jpg";
 import Login from "../Login/Login";
 import Snack from "../Snackbar/Snack";
+import UploadingInfo from "../UploadingInfo/UploadingInfo";
 
 const Container = () => {
   const location = useLocation();
@@ -27,23 +28,29 @@ const Container = () => {
     if (loggedIn) {
       if (pathName === "/field") {
         return (
-          <FieldUploader
-            setSnackbarData={setSnackbarData}
-            uploadingFiles={uploadingFiles}
-            setUploadingFiles={setUploadingFiles}
-            helperText={helperText}
-            setHelperText={setHelperText}
-          />
+          <Fragment>
+            {uploadingFiles && <UploadingInfo />}
+            <FieldUploader
+              setSnackbarData={setSnackbarData}
+              uploadingFiles={uploadingFiles}
+              setUploadingFiles={setUploadingFiles}
+              helperText={helperText}
+              setHelperText={setHelperText}
+            />
+          </Fragment>
         );
       } else {
         return (
-          <SemifieldUploader
-            setSnackbarData={setSnackbarData}
-            uploadingFiles={uploadingFiles}
-            setUploadingFiles={setUploadingFiles}
-            helperText={helperText}
-            setHelperText={setHelperText}
-          />
+          <Fragment>
+            {uploadingFiles && <UploadingInfo />}
+            <SemifieldUploader
+              setSnackbarData={setSnackbarData}
+              uploadingFiles={uploadingFiles}
+              setUploadingFiles={setUploadingFiles}
+              helperText={helperText}
+              setHelperText={setHelperText}
+            />
+          </Fragment>
         );
       }
     } else {

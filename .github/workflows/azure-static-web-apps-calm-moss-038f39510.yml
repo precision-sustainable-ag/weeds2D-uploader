@@ -18,6 +18,13 @@ jobs:
       - uses: actions/checkout@v2
         with:
           submodules: true
+      - name: "Create env file"
+        run: |
+          touch .env
+          echo REACT_APP_BLOB_SAS_TOKEN=${{ secrets.REACT_APP_BLOB_SAS_TOKEN }} >> .env
+          echo REACT_APP_PASS=${{ secrets.REACT_APP_PASS }} >> .env
+          echo REACT_APP_USER=${{ secrets.REACT_APP_USER }} >> .env
+          cat .env
       - name: Build And Deploy
         id: builddeploy
         uses: Azure/static-web-apps-deploy@v1

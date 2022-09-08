@@ -29,8 +29,7 @@ export const getImageRow = async (imageName) => {
         if (err) {
           throw err;
         }
-
-        if (result.feed.entry.length === 0)
+        if (!result.feed.entry)
           imageRow =
             "No JPG file present in Azure Blob Storage with name " + imageName;
         else if (result.feed.entry.length > 1)

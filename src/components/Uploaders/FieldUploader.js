@@ -20,6 +20,7 @@ const FieldUploader = ({
     let index = 0;
     Array.from(event.target.files).forEach((file) => {
       getImageRow(file.name.split(".")[0]).then((res) => {
+        console.log(res);
         if (typeof res === "string" || res instanceof String) {
           setSnackbarData({
             open: true,

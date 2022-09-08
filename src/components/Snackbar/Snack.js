@@ -9,7 +9,7 @@ const Snack = ({ snackbarData, setSnackbarData }) => {
         horizontal: "center",
       }}
       open={snackbarData.open}
-      autoHideDuration={10000}
+      autoHideDuration={2000}
       onClose={() =>
         setSnackbarData({ ...snackbarData, open: !snackbarData.open })
       }

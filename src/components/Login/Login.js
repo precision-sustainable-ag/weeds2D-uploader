@@ -11,11 +11,6 @@ const Login = ({ setLoggedIn, setSnackbarData }) => {
 
     if (username === validUsername && password === validPassword) {
       setLoggedIn(true);
-      setSnackbarData({
-        open: true,
-        text: "Successfully logged in!",
-        severity: "success",
-      });
     } else {
       setSnackbarData({
         open: true,

@@ -8,8 +8,6 @@ let sasToken = process.env.REACT_APP_BLOB_SAS_TOKEN;
 let storageAccountName = `weedsimagerepo`;
 const storageContainerName = `weedsimagerepo`;
 
-console.log(sasToken);
-
 // if (!process.env.NODE_ENV || process.env.NODE_ENV === "development") {
 //   // dev code
 //   sasToken = process.env.REACT_APP_BLOB_SAS_TOKEN_DEVELOP;

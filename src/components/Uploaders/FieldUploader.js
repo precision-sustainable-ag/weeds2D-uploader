@@ -1,11 +1,10 @@
 import React, { Fragment } from "react";
-import { Link } from "react-router-dom";
-import { Button, Grid, Typography } from "@mui/material";
 import {
   getImageRow,
   insertNewFieldImageRow,
   uploadFileToBlob,
 } from "../../shared_functions/azure_storage_functions";
+import Input from "./Input";
 
 const FieldUploader = ({
   setSnackbarData,
@@ -15,6 +14,7 @@ const FieldUploader = ({
   setHelperText,
 }) => {
   const handlePickedFiles = (event) => {
+    setUploadingFiles(true);
     const numberOfFiles = event.target.files.length;
     let failedFiles = "";
     let index = 0;
@@ -43,7 +43,6 @@ const FieldUploader = ({
           }
           index += 1;
         } else {
-          setUploadingFiles(true);
           uploadFileToBlob(file, "weedsimagerepo").then(() => {
             insertNewFieldImageRow(res).then(() => {
               if (index === numberOfFiles - 1) {
@@ -71,28 +70,11 @@ const FieldUploader = ({
   if (uploadingFiles) return <Fragment></Fragment>;
   else
     return (
-      <Grid item container spacing={2}>
-        <Grid item xs={12} sm={12} md={12} lg={12}>
-          <Typography>{helperText}</Typography>
-        </Grid>
-        <Grid item>
-          <Button variant="contained" component="label">
-            Upload Files
-            <input
-              type="file"
-              multiple
-              hidden
-              accept=".arw"
-              onChange={handlePickedFiles}
-            />
-          </Button>
-        </Grid>
-        <Grid item>
-          <Button component={Link} to="semifield" variant="contained">
-            Go to semifield uploader
-          </Button>
-        </Grid>
-      </Grid>
+      <Input
+        helperText={helperText}
+        handlePickedFiles={handlePickedFiles}
+        fieldType="field"
+      />
     );
 };
 

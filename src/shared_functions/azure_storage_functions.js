@@ -4,7 +4,7 @@ import { BlobServiceClient } from "@azure/storage-blob";
 
 const headers = { "Content-Type": "application/json" };
 
-let sasToken = process.env.REACT_APP_BLOB_SAS_TOKEN;
+let sasToken = process.env.REACT_APP_BLOB_SAS_TOKEN_NEW;
 let storageAccountName = `weedsimagerepo`;
 const storageContainerName = `weedsimagerepo`;
 

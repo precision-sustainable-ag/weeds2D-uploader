@@ -21,7 +21,7 @@ jobs:
       - name: "Create env file"
         run: |
           touch .env
-          echo REACT_APP_BLOB_SAS_TOKEN_NEW=${{ secrets.REACT_APP_BLOB_SAS_TOKEN_NEW }} >> .env
+          echo "REACT_APP_BLOB_SAS_TOKEN_NEW=${{ secrets.REACT_APP_BLOB_SAS_TOKEN_NEW }}" >> .env
           echo REACT_APP_PASS=${{ secrets.REACT_APP_PASS }} >> .env
           echo REACT_APP_USER=${{ secrets.REACT_APP_USER }} >> .env
           cat .env
@@ -50,3 +50,4 @@ jobs:
         with:
           azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_CALM_MOSS_038F39510 }}
           action: "close"
+
